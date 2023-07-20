@@ -1,7 +1,13 @@
 package subway.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import subway.dto.LineRequest;
+
 import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class Line {
     @Id
@@ -12,23 +18,13 @@ public class Line {
     @Column
     private String color;
 
-    public Line() {
-    }
-
     public Line(String name, String color) {
         this.name = name;
         this.color = color;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getColor() {
-        return color;
+    public Line(LineRequest lineRequest) {
+        this.name = lineRequest.getName();
+        this.color = lineRequest.getColor();
     }
 }

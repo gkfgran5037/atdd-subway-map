@@ -1,5 +1,11 @@
 package subway.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import subway.entity.Line;
+
+@Getter
+@Setter
 public class LineResponse {
     private Long id;
     private String name;
@@ -11,15 +17,9 @@ public class LineResponse {
         this.color = color;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getColor() {
-        return color;
+    public LineResponse(Line line) {
+        this.id = line.getId();
+        this.name = line.getName();
+        this.color = line.getColor();
     }
 }
