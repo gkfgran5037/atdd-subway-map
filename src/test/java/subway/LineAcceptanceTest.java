@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import subway.dto.LineResponse;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +23,7 @@ public class LineAcceptanceTest {
      * When 지하철 노선을 생성하면
      * Then 지하철 노선 목록 조회 시 생성한 노선을 찾을 수 있다
      */
-    // TODO : 지하철노선 생성 테스트
+    // TODO : 유효성 확인
     @Test
     void createLine() {
         // when
@@ -40,14 +41,28 @@ public class LineAcceptanceTest {
     }
 
 
-
-    // TODO : 지하철노선 목록 조회  테스트
-
     /**
      * Given 지하철 노선을 생성하고
      * When 생성한 지하철 노선을 조회하면
      * Then 생성한 지하철 노선의 정보를 응답받을 수 있다.
      */
+    // TODO : LineResponse 확인
+    @Test
+    void showLines() {
+        // given
+        String nameOfLine1 = "1호선";
+        String colorOfLine1 = "blue";
+        String nameOfLine2 = "2호선";
+        String colorOfLine2 = "green";
+        String responseOfLine1 = createAndGetName(nameOfLine1, colorOfLine1);
+        String responseOfLine2 = createAndGetName(nameOfLine2, colorOfLine2);
+
+        // when
+        List<String> lineNames = findNames();
+
+        // then
+        assertThat(lineNames).contains(responseOfLine1, responseOfLine2);
+    }
     // TODO : 지하철노선 조회  테스트
 
     /**
@@ -81,5 +96,24 @@ public class LineAcceptanceTest {
                 .when().post("/lines")
                 .then().log().all()
                 .extract();
+    }
+
+    private String createAndGetName(String name, String color) {
+        return create(name, color)
+                .jsonPath()
+                .getString("name");
+    }
+
+    private static ExtractableResponse<Response> findAll() {
+        return RestAssured.given().log().all()
+                .when().get("/lines")
+                .then().log().all()
+                .extract();
+    }
+
+    private static List<String> findNames() {
+        return findAll()
+                .jsonPath()
+                .getList("name", String.class);
     }
 }
