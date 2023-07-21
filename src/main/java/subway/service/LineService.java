@@ -32,4 +32,9 @@ public class LineService {
                 .map(LineResponse::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public LineResponse findLine(Long id) {
+        return new LineResponse(lineRepository.findById(id).get());
+    }
 }

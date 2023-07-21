@@ -63,13 +63,34 @@ public class LineAcceptanceTest {
         // then
         assertThat(lineNames).contains(responseOfLine1, responseOfLine2);
     }
-    // TODO : 지하철노선 조회  테스트
 
     /**
      * Given 지하철 노선을 생성하고
      * When 생성한 지하철 노선을 수정하면
      * Then 해당 지하철 노선 정보는 수정된다
      */
+    // TODO : 유효성 검사
+    @Test
+    void findLineTest() {
+        // given
+        String name = "분당선";
+        String color = "yellow";
+        ExtractableResponse<Response> response = create(name, color);
+        Long lineId = response.jsonPath().getLong("id");
+
+        // when
+        LineResponse line = RestAssured.given().log().all()
+                .pathParam("id", lineId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/lines/{id}")
+                .then().log().all()
+                .extract().jsonPath().getObject(".", LineResponse.class);
+
+        // then
+        assertThat(line.getName()).isEqualTo(name);
+        assertThat(line.getColor()).isEqualTo(color);
+    }
+
     // TODO : 지하철노선 수정 테스트
 
     /**
