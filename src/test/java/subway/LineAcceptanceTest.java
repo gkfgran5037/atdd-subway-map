@@ -91,13 +91,40 @@ public class LineAcceptanceTest {
         assertThat(line.getColor()).isEqualTo(color);
     }
 
-    // TODO : 지하철노선 수정 테스트
-
     /**
      * Given 지하철 노선을 생성하고
      * When 생성한 지하철 노선을 삭제하면
      * Then 해당 지하철 노선 정보는 삭제된다
      */
+    // TODO : 지하철노선 수정 테스트
+    @Test
+    void updateLineTest() {
+        // given
+        String name = "분당선";
+        String color = "yellow";
+        ExtractableResponse<Response> response = create(name, color);
+        Long lineId = response.jsonPath().getLong("id");
+
+        // when
+        Map<String, String> updateLine = new HashMap<>();
+        String changeColor = "white";
+        updateLine.put("name", name);
+        updateLine.put("color", changeColor);
+        LineResponse line = RestAssured.given().log().all()
+                .pathParam("id", lineId)
+                .body(updateLine)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/lines/{id}")
+                .then().log().all()
+                .extract().jsonPath().getObject(".", LineResponse.class);
+
+        // then
+        assertThat(line.getName()).isEqualTo(name);
+        assertThat(line.getColor()).isNotEqualTo(color);
+        assertThat(line.getColor()).isEqualTo(changeColor);
+    }
+
+
     // TODO : 지하철노선 삭제  테스트
 
     /**

@@ -27,4 +27,10 @@ public class Line {
         this.name = lineRequest.getName();
         this.color = lineRequest.getColor();
     }
+
+    public Line update(LineRequest lineRequest) {
+        this.name = lineRequest.getName();
+        this.color = lineRequest.getColor();
+        return this;
+    }
 }

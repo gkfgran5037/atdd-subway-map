@@ -35,6 +35,17 @@ public class LineService {
 
     @Transactional
     public LineResponse findLine(Long id) {
-        return new LineResponse(lineRepository.findById(id).get());
+        return new LineResponse(findById(id));
+    }
+
+    @Transactional
+    private Line findById(Long id) {
+        return lineRepository.findById(id).get();
+    }
+
+    @Transactional
+    public LineResponse updateLine(Long id, LineRequest lineRequest) {
+        Line line = findById(id);
+        return new LineResponse(line.update(lineRequest));
     }
 }
