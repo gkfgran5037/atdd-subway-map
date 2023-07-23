@@ -96,7 +96,7 @@ public class LineAcceptanceTest {
      * When 생성한 지하철 노선을 삭제하면
      * Then 해당 지하철 노선 정보는 삭제된다
      */
-    // TODO : 지하철노선 수정 테스트
+    // TODO : 생성자
     @Test
     void updateLineTest() {
         // given
@@ -124,14 +124,33 @@ public class LineAcceptanceTest {
         assertThat(line.getColor()).isEqualTo(changeColor);
     }
 
-
-    // TODO : 지하철노선 삭제  테스트
-
     /**
      * Given 2개의 지하철 노선을 생성하고
      * When 지하철 노선 목록을 조회하면
      * Then 지하철 노선 목록 조회 시 2개의 노선을 조회할 수 있다.
      */
+    @Test
+    void deleteLineTest() {
+        // given
+        String name = "분당선";
+        String color = "yellow";
+        ExtractableResponse<Response> response = create(name, color);
+        Long lineId = response.jsonPath().getLong("id");
+
+        // when
+        int statusCode = RestAssured.given().log().all()
+                .pathParam("id", lineId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/lines/{id}")
+                .then().log().all()
+                .extract().statusCode();
+
+        // then
+        assertThat(statusCode).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        // then
+        assertThat(findNames()).doesNotContain(name);
+    }
 
     private ExtractableResponse<Response> create(String name, String color) {
         Map<String, String> params = new HashMap<>();
